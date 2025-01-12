@@ -1,0 +1,113 @@
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        int closestSum = nums[0] + nums[1] + nums[2]; 
+        
+        for (int i = 0; i < n - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;  // Skip duplicates
+            int low = i + 1, high = n - 1;
+            
+            while (low < high) {
+                int sum = nums[i] + nums[low] + nums[high];
+                
+                // Check if the current sum is closer to the target
+                if (abs(sum - target) < abs(closestSum - target)) {
+                    closestSum = sum;
+                }
+                
+                if (sum < target) {
+                    low++;
+                } else if (sum > target) {
+                    high--;
+                } else {
+                    return sum;  // exactly equal sum
+                }
+            }
+        }
+        return closestSum; 
+    }
+};
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        
+        if (digits.empty()) {
+            return res;
+        }
+        
+        unordered_map<char, string> digitToLetters = {
+            {'2', "abc"},
+            {'3', "def"},
+            {'4', "ghi"},
+            {'5', "jkl"},
+            {'6', "mno"},
+            {'7', "pqrs"},
+            {'8', "tuv"},
+            {'9', "wxyz"}
+        };
+        
+        backtrack(digits, 0, "", res, digitToLetters);
+        
+        return res;        
+    }
+
+    void backtrack(const string& digits, int idx, string comb, vector<string>& res, const unordered_map<char, string>& digitToLetters) {
+        if (idx == digits.length()) {
+            res.push_back(comb);
+            return;
+        }
+        
+        string letters = digitToLetters.at(digits[idx]);
+        for (char letter : letters) {
+            backtrack(digits, idx + 1, comb + letter, res, digitToLetters);
+        }
+    }    
+};
+#define ll long long
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        vector<vector<int>> ans;
+        int i=0, j=1, k=2, l=n-1;
+        while(i<j and j<k and k<l){
+            ll res = (ll)target - (ll)nums[i] - (ll)nums[j] - (ll)nums[k] - (ll)nums[l]; //Always try subtraction to tackel overflow cases
+            if(res < 0)l--; //if res is less then 0 mean sum of 4 num is greater then target, so reduce nums value
+            else if(res > 0)k++; //if res is greater then 0 mean sum of 4 num is less then target, so increase nums value
+            else {
+                ans.push_back({nums[i], nums[j], nums[k], nums[l]});
+                l--; 
+                while(l>0 and nums[l] == nums[l+1])l--;  //move new val of nums[l] to avoide getting duplicate answer
+                k++; 
+                while(k<n and nums[k] == nums[k-1])k++; //move new val of nums[k] to avoide getting duplicate answer
+            }
+            if(k >= l){
+                j++; while(j<n and nums[j] == nums[j-1])j++;  //same reason here
+                k = j+1; l = n-1;
+                // Even after increment of j this condition met, then increase i and update rest variable accordingly
+                if(k >= l){
+                    i++; while(i<n and nums[i] == nums[i-1])i++;  //same reason here
+                    j = i+1; k = j+1; 
+                }
+                
+            }
+        }
+        return ans;
+    }
+};
+
+
+/**
+ * Definition for singly-linked list.
+ *  struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ *  };
