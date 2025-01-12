@@ -1,0 +1,138 @@
+Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode * dummy = new ListNode(-1), *ptr;
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+        int n = lists.size();
+        for(int i=0; i<n; i++){
+            if(lists[i]){
+                pq.push({lists[i]->val, i});
+            }
+        }
+        ptr = dummy;
+        while(!pq.empty()){
+            int idx = pq.top().second;
+            pq.pop();
+            ptr->next = lists[idx];
+            ptr = ptr->next;
+            if(lists[idx]->next) {
+                lists[idx] = lists[idx]->next;
+                pq.push({lists[idx]->val,idx});
+            }
+        }
+        ptr->next = nullptr;
+        return dummy->next;
+    }
+};
+
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode dummy(0, head);
+        ListNode *prev = &dummy, *cur = head;
+
+        while (cur && cur->next) {
+            ListNode *npn = cur->next->next;
+            ListNode *second = cur->next;
+
+            second->next = cur;
+            cur->next = npn;
+            prev->next = second;
+
+            prev = cur;
+            cur = npn;
+        }
+
+        return dummy.next;        
+    }
+};
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // Base case: if head is NULL, return NULL
+        if(head == NULL) {
+            return NULL;
+        }
+
+        // Check if there are at least k nodes to reverse
+        ListNode* check = head;
+        for (int i = 0; i < k; ++i) {
+            if (!check) return head; 
+            check = check->next;
+        }
+
+        // Reverse the k-group
+        ListNode* next = NULL;
+        ListNode* curr = head;
+        ListNode* prev = NULL;
+        int cnt = 0;
+
+        while(curr != NULL && cnt < k) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+            cnt++;
+        }
+
+        // Recursively reverse the next groups and attach them
+        if(next != NULL) {
+            head->next = reverseKGroup(next, k);
+        }
+
+        // Return the new head of the reversed list
+        return prev;
+    }
+};
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int j = 1;
+        for(int i = 1; i < nums.size(); i++){
+            if(nums[i] != nums[i - 1]){
+                nums[j] = nums[i];
+                j++;
+            }
+        }
+        return j;
+    }
+};
+
+
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int k = 0;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+
+        return k;        
+    }
+};
