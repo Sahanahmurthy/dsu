@@ -1,0 +1,104 @@
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+
+        ListNode* left = head;
+        ListNode* right = head;
+        int x;
+        for ( x = 0; x <= n && right; x++) {
+            right = right->next;
+        }
+
+        if (right == nullptr && x == n ) {
+            ListNode* rh = head;
+            head = head->next;
+            delete rh;
+            return head;
+        }
+
+        while (right) {
+            left = left->next;
+            right = right->next;
+        }
+
+        ListNode* rm = left->next;
+        left->next = rm->next;
+
+        delete rm;
+        return head;
+    }
+};
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> st; // create an empty stack to store opening brackets
+        for (char c : s) { // loop through each character in the string
+            if (c == '(' || c == '{' || c == '[') { // if the character is an opening bracket
+                st.push(c); // push it onto the stack
+            } else { // if the character is a closing bracket
+                if (st.empty() || // if the stack is empty or 
+                    (c == ')' && st.top() != '(') || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
+                    (c == '}' && st.top() != '{') ||
+                    (c == ']' && st.top() != '[')) {
+                    return false; // the string is not valid, so return false
+                }
+                st.pop(); // otherwise, pop the opening bracket from the stack
+            }
+        }
+        return st.empty(); // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+                           // so the string is valid, otherwise, there are unmatched opening brackets, so return false
+    }
+};
+
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* dummy = new ListNode(0);
+        ListNode* current = dummy;
+        
+        while (list1 != nullptr && list2 != nullptr) {
+            if (list1->val < list2->val) {
+                current->next = list1;
+                list1 = list1->next;
+            } else {
+                current->next = list2;
+                list2 = list2->next;
+            }
+            current = current->next;
+        }
+        
+        // Attach remaining nodes
+        current->next = list1 != nullptr ? list1 : list2;
+        
+        return dummy->next;  // Return the head of the merged list
+    }
+};
+
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        dfs(0, 0, "", n, res);
+        return res;        
+    }
+
+private:
+    void dfs(int openP, int closeP, string s, int n, vector<string>& res) {
+        if (openP == closeP && openP + closeP == n * 2) {
+            res.push_back(s);
+            return;
+        }
+
+        if (openP < n) {
+            dfs(openP + 1, closeP, s + "(", n, res);
+        }
+
+        if (closeP < openP) {
+            dfs(openP, closeP + 1, s + ")", n, res);
+        }
+    }
+};
